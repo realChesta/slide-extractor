@@ -31,7 +31,7 @@ class Main:
         self.output = output
         self.detection = changedetection.ChangeDetection(
             stepSize, progressInterval, debug)
-        self.dupeHandler = duplicatehandler.DuplicateHandler()
+        self.dupeHandler = duplicatehandler.DuplicateHandler(1)
 
     def strfdelta(self, tdelta, fmt):
         d = {"days": tdelta.days}
