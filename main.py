@@ -5,6 +5,7 @@ import argparse
 import cv2
 import imutils
 import changedetection
+import duplicatehandler
 
 
 parser = argparse.ArgumentParser()
@@ -23,12 +24,14 @@ args = vars(parser.parse_args())
 
 
 class Main:
+    slideCounter = 0
+
     def __init__(self, debug, vidpath, output, stepSize, progressInterval):
         self.vidpath = vidpath
         self.output = output
         self.detection = changedetection.ChangeDetection(
             stepSize, progressInterval, debug)
-        self.slideCounter = 0
+        self.dupeHandler = duplicatehandler.DuplicateHandler()
 
     def strfdelta(self, tdelta, fmt):
         d = {"days": tdelta.days}
@@ -56,12 +59,10 @@ class Main:
         return ratio >= min and ratio <= max
 
     def onTrigger(self, frame):
-        print("Change trigger!")
         frame = self.cropImage(frame)
         if frame is not None and self.checkRatio(frame, 1.2, 1.5):
-            self.saveSlide(frame)
-        else:
-            print("Invalid slide!")
+            if self.dupeHandler.check(frame):
+                self.saveSlide(frame)
 
     def saveSlide(self, slide):
         if not os.path.exists(self.output):
