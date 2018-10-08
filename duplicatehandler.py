@@ -40,15 +40,3 @@ class DuplicateHandler:
         percent = (np.count_nonzero(diff) / diff.size) * 100
 
         return percent
-
-# ---------
-
-
-handler = DuplicateHandler(1)
-
-for i in range(0, 36):
-    img = cv2.imread("output\\" + str(i) + ".jpg", cv2.IMREAD_GRAYSCALE)
-    if handler.check(img):
-        print("adding " + str(i))
-    else:
-        print("not adding " + str(i) + ", duplicate!")
