@@ -24,7 +24,7 @@ Here is a simple way to download the needed part of a lecture video:
    ```javascript
    window.data.streams.find(function(s){return!!(s.sources.mp4&&s.sources.mp4.length>0)&&s.sources.mp4[0].src.includes("presentation")}).sources.mp4.forEach(function(s){console.log(s.src)});
    ```
-   *(from `video-finder.js`)*
+   *(see `video-finder.js`)*
 
 - You will now see one or more links, click one and **download the video it leads to**.
 
