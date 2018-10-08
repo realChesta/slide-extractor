@@ -30,13 +30,8 @@ class DuplicateHandler:
 
         diff = cv2.absdiff(img1, img2)
         diff = cv2.threshold(diff, 25, 255, cv2.THRESH_BINARY)[1]
-
-        #cv2.imshow("diff", diff)
-        # cv2.waitKey(0)
-
         diff = diff.astype(np.uint8)
-        # (np.count_nonzero(diff) / diff.size) * 100
-        # (np.sum(diff) / (diff.size * 255)) * 100
+        # alternatively: (np.sum(diff) / (diff.size * 255)) * 100
         percent = (np.count_nonzero(diff) / diff.size) * 100
 
         return percent
