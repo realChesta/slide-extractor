@@ -9,7 +9,7 @@ class ChangeDetection:
     # minimum contour area (1000)
     minArea = 1000
     # maximum frames before firstFrame reset (3)
-    maxIdle = c3
+    maxIdle = 3
     # frame step size
     stepSize = 20
     # amount of percent between each progress event
