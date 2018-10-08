@@ -18,7 +18,7 @@ $ pip install -r requirements.txt
 Here is a simple way to download the needed part of a lecture video:
 
 - Navigate to the website where the player of your video is located.
-- (in Google Chrome) *Right click* the player and select `Inspect`
+- (in Google Chrome) *Right click* the player and select `Inspect`.
 - Paste the following into the console:
 
    ```javascript
@@ -42,7 +42,7 @@ $ python main.py -v "yourpath/video.mp4"
 
 * `-v, --video [path]` sets the video file to use.
 * `-o, --output [path]` (directory) sets where the extracted files are saved. Default is `"output"`.
-* `-s --step-size [num]` sets how many frames should be skipped in each iteration. The higher the number, the faster, but could lead to missed slides. Default is `20`.
+* `-s, --step-size [num]` sets how many frames should be skipped in each iteration. The higher the number, the faster, but could lead to missed slides. Default is `20`.
 * `-p --progress-interval [num]` sets how often the program should report it's progress (in percent). Example: if set to `5`, the program will send a message every 5 percent it makes. Default is `1`.
 
 
