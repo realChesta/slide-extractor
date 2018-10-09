@@ -4,6 +4,7 @@ import os
 import argparse
 import cv2
 import imutils
+import img2pdf
 import changedetection
 import duplicatehandler
 
@@ -11,8 +12,8 @@ import duplicatehandler
 parser = argparse.ArgumentParser()
 parser.add_argument("-v", "--video", dest="video", required=True,
                     help="the path to your video file to be analyzed")
-parser.add_argument("-o", "--output", dest="output", default="output",
-                    help="the output directory where the extracted slides will be saved")
+parser.add_argument("-o", "--output", dest="output", default="slides.pdf",
+                    help="the output pdf file where the extracted slides will be saved")
 parser.add_argument("-s", "--step-size", dest="step-size", default=20,
                     help="the amount of frames skipped in every iteration")
 parser.add_argument("-p", "--progress-interval", dest="progress-interval", default=1,
@@ -62,7 +63,8 @@ class Main:
         frame = self.cropImage(frame)
         if frame is not None and self.checkRatio(frame, 1.2, 1.5):
             if self.dupeHandler.check(frame):
-                self.saveSlide(frame)
+                print("Found a new slide!")
+            # self.saveSlide(frame)
 
     def saveSlide(self, slide):
         if not os.path.exists(self.output):
@@ -79,6 +81,14 @@ class Main:
                                    "{hours}h {minutes}min {seconds}s")
         print("progress: ~%d%% | about %s left" % (percent, etaString))
 
+    def convertToPDF(self):
+        imgs = []
+        for i in self.dupeHandler.entries:
+            imgs.append(cv2.imencode('.jpg', i)[1].tostring())
+
+        with open(self.output, "wb") as f:
+            f.write(img2pdf.convert(imgs))
+
     def start(self):
         self.detection.onTrigger += self.onTrigger
         self.detection.onProgress += self.onProgress
@@ -86,6 +96,9 @@ class Main:
         self.startTime = time.time()
 
         self.detection.start(cv2.VideoCapture(self.vidpath.strip()))
+
+        print("Saving PDF...")
+        self.convertToPDF()
 
         print("All done!")
 

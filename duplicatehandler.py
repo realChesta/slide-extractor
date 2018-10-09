@@ -9,9 +9,6 @@ class DuplicateHandler:
         self.threshold = thresh
 
     def check(self, img, add=True):
-        if len(img.shape) > 2:
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
         for i in self.entries:
             if self.calcDiff(i, img) < self.threshold:
                 return False
@@ -22,6 +19,12 @@ class DuplicateHandler:
         return True
 
     def calcDiff(self, img1, img2):
+        # convert images to grayscale if needed
+        if len(img1.shape) > 2:
+            img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+        if len(img2.shape) > 2:
+            img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+
         # bring the two images to the same size
         if img1.shape[0] > img2.shape[0] or img1.shape[1] > img2.shape[1]:
             img1 = img1[0: img2.shape[0], 0: img2.shape[1]]
