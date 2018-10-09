@@ -19,6 +19,9 @@ Here is a simple way to download the needed part of a lecture video:
 
 - Navigate to the website where the player of your video is located.
 - (in Google Chrome) *Right click* the player and select `Inspect`.
+
+   Alternatively, you can also open the console directly and change the context from `top` to the player.
+
 - Paste the following into the console:
 
    ```javascript
