@@ -74,12 +74,14 @@ class Main:
             self.output, str(self.slideCounter) + ".jpg"), slide)
         self.slideCounter += 1
 
-    def onProgress(self, percent):
+    def onProgress(self, percent, pos):
         elapsed = time.time() - self.startTime
         eta = (elapsed / percent) * (100 - percent)
+        fps = pos / elapsed
         etaString = self.strfdelta(datetime.timedelta(seconds=eta),
                                    "{hours}h {minutes}min {seconds}s")
-        print("progress: ~%d%% | about %s left" % (percent, etaString))
+        print("progress: ~%d%% @ %d fps | about %s left" %
+              (percent, fps, etaString))
 
     def convertToPDF(self):
         imgs = []

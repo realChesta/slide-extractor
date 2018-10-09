@@ -86,7 +86,7 @@ class ChangeDetection:
 
             if progress - lastProgress >= self.progressInterval:
                 lastProgress = progress
-                self.onProgress.fire(progress)
+                self.onProgress.fire(progress, currentPosition)
 
             camera.set(1, min(currentPosition +
                               self.stepSize, totalFrames))
