@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import imutils
 import eventhook
+import filevideostream
 
 
 class ChangeDetection:
@@ -24,7 +25,7 @@ class ChangeDetection:
         self.progressInterval = progressInterval
         self.showDebug = showDebug
 
-    def start(self, camera):
+    def start(self, source):
         firstFrame = None
         prevFrame = None
         # amount of contours
@@ -42,19 +43,25 @@ class ChangeDetection:
 
         print('change detection initiated')
 
-        totalFrames = camera.get(cv2.CAP_PROP_FRAME_COUNT) - 1
+        self.videoStream = filevideostream.FileVideoStream(
+            source, skipSize=self.stepSize)
 
-        while currentPosition < totalFrames:
-            (grabbed, frame) = camera.read()
+        totalFrames = self.videoStream.totalFrames
+
+        self.videoStream.start()
+
+        # sleep to allow the thread to start
+        time.sleep(1)
+
+        while self.videoStream.more():
+            frame = self.videoStream.read()
             if frame is None:
                 break
 
             original = frame.copy()
 
             # convert grabbed frame to gray and blur
-            frame = imutils.resize(frame, width=500)
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            gray = cv2.GaussianBlur(gray, (21, 21), 0)
+            gray = self.transform(frame)
 
             if firstFrame is None:
                 firstFrame = np.zeros(gray.shape, np.uint8)
@@ -88,9 +95,7 @@ class ChangeDetection:
                 lastProgress = progress
                 self.onProgress.fire(progress)
 
-            camera.set(1, min(currentPosition +
-                              self.stepSize, totalFrames))
-            currentPosition = camera.get(cv2.CAP_PROP_POS_FRAMES)
+            currentPosition = self.videoStream.currentPosition
 
             if self.showDebug:
                 # loop over the contours
@@ -115,8 +120,14 @@ class ChangeDetection:
                 if key == ord('q'):
                     break
 
-        camera.release()
+        self.videoStream.stop()
         cv2.destroyAllWindows()
+
+    def transform(self, img):
+        img = imutils.resize(img, width=500)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.GaussianBlur(img, (21, 21), 0)
+        return img
 
     def calcThresh(self, frame):
         thresh = cv2.threshold(frame, 25, 255, cv2.THRESH_BINARY)[1]

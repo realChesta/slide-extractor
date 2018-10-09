@@ -95,7 +95,7 @@ class Main:
 
         self.startTime = time.time()
 
-        self.detection.start(cv2.VideoCapture(self.vidpath.strip()))
+        self.detection.start(self.vidpath.strip())
 
         print("Saving PDF...")
         self.convertToPDF()
